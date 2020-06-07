@@ -16,18 +16,30 @@
  * @return {number}
  */
 var nthUglyNumber = function (n) {
-    if (n == 1) {
-        return 1
-    }
-    let a = 0,
-        b = 0,
-        c = 0
-    let temp = [1]
+    /**
+     * 2    3    5    4   6   10
+     * 2*1 3*1, 5*1, 2*2 3*2, 5*2, 2*3, 3*3, 5*3, 
+     */
+    /**
+     * 题解：
+     * 质因子/质因数: 就是一个积的两个乘数
+     * 丑数的定义：一个积的的质因子只包含 2,3,5, 怎么理解呢？
+     * 举三个例子：
+     * 4 = 2*2, 由 2 和 2 两个丑数组成，所以 4 是丑数
+     * 8 = 4*2 = 2*2*2, 由 2 和 4 两个丑数组成，所以 8 是丑数
+     * 14 = 2*7, 其中 7 不是丑数，所以 14 也就不是丑数
+     * 总结：丑数的最小质因子只能是 2, 3, 5; 那么往后推丑数, 一定是丑数*丑数得来的
+     * 按题目要求，生成的丑数顺序是升序，所以每次要取最小的组合
+     */
+    let cs = [1]
+    let [n1, n2, n3] = [2, 3, 5]
+    let [i1, i2, i3] = [0, 0, 0]
     for (let i = 1; i < n; i++) {
-        temp[i] = Math.min(temp[a] * 2, temp[b] * 3, temp[c] * 5)
-        temp[i] >= temp[a] * 2 ? a++ : 0
-        temp[i] >= temp[b] * 3 ? b++ : 0
-        temp[i] >= temp[c] * 5 ? c++ : 0
+        let lastI = cs.push(Math.min(cs[i1] * n1, cs[i2] * n2, cs[i3] * n3))
+        lastI--
+        if (cs[lastI] === cs[i1] * n1) i1++
+        if (cs[lastI] === cs[i2] * n2) i2++
+        if (cs[lastI] === cs[i3] * n3) i3++
     }
-    return temp[temp.length - 1]
+    return cs[n - 1]
 };
